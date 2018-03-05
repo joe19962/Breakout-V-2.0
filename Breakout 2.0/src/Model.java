@@ -6,7 +6,7 @@
 public class Model {
 	public Vector2D ballPosition = new Vector2D(1, 1);
 	public Vector2D paddlePosition = new Vector2D(1, 1);
-	public static Vector2D[] brickPosition = new Vector2D[100];
+	public Vector2D[] brickPosition = new Vector2D[100];
 	private static int level = 0;// (int) (Math.random() * 2);
 	public static final int WINDOW_WIDTH = 520;
 	public static final int WINDOW_HEIGHT = 1000;
@@ -23,7 +23,7 @@ public class Model {
 
 	private boolean collisonVertical = false;
 	private boolean collisonHorizontal = false;
-	public static int brick_counter = 1;
+	public int brick_counter = 1;
 	private static boolean running = false;
 
 	/**
@@ -41,20 +41,19 @@ public class Model {
 		View view = new View(model, control);
 
 		view.start();
-		view.init();
 		view.addKeyListeners();
 
 		model.ConstructBall();
 		model.ConstructPaddel();
 		model.ConstructBrick();
-		view.update();
+
 		running = true;
 		while (running) {
-			if (brick_counter == 0) {
+			if (model.brick_counter == 0) {
 				running = false;
 				view.gamewin();
 			}
-			if (view.ball.getY() >= WINDOW_HEIGHT) {
+			if (model.ballPosition.getY() >= WINDOW_HEIGHT) {
 				running = false;
 				view.gameOver();
 			}
@@ -62,8 +61,8 @@ public class Model {
 			new_time = first_time;
 			first_time = System.nanoTime();
 			deltaT = (first_time - new_time) * 0.000000001; // in seconds
-			System.out.println(deltaT);
 			model.ballmovement();
+			view.update();
 			// System.out.println(model.ballPosition.getX() + "X " +
 			// model.ballPosition.getY() + " Y");
 
@@ -213,7 +212,6 @@ public class Model {
 		// vector_movement = vec_direction * scalar_speed per unit * deltaT(time passed
 		// in one cycle);
 		ballPosition = ballPosition.add(bewegung);
-		System.out.println(ballPosition.getX() + "X " + ballPosition.getY() + "y");
 
 	}
 
