@@ -8,8 +8,6 @@ public class Model {
 	public Vector2D paddlePosition = new Vector2D(1, 1);
 	public static Vector2D[] brickPosition = new Vector2D[100];
 	private static int level = 0;// (int) (Math.random() * 2);
-	private double vx = 0.75;
-	private double vy = -0.5;
 	public static final int WINDOW_WIDTH = 520;
 	public static final int WINDOW_HEIGHT = 1000;
 	public static final int PADDLE_WIDTH = 100;
@@ -39,11 +37,13 @@ public class Model {
 		// TODO Auto-generated method stub
 		first_time = System.nanoTime();
 		Model model = new Model();
-		Control control = new Control();
+		Control control = new Control(model);
 		View view = new View(model, control);
+
 		view.start();
-		view.addKeyListeners();
 		view.init();
+		view.addKeyListeners();
+
 		model.ConstructBall();
 		model.ConstructPaddel();
 		model.ConstructBrick();
