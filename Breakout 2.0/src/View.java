@@ -1,6 +1,4 @@
 
-import javax.swing.plaf.basic.BasicLabelUI;
-
 import acm.graphics.GOval;
 import acm.graphics.GRect;
 import acm.io.IODialog;
@@ -15,10 +13,11 @@ import acm.program.GraphicsProgram;
  *
  */
 public class View extends GraphicsProgram {
+	
 	public GOval ball;
 	public GRect paddel;
-	public GRect[] brick = new GRect[40];
-	private Model model;
+	public GRect[] brick = new GRect[100];
+	public Model model;
 	public Control control;
 
 	/**
@@ -26,7 +25,26 @@ public class View extends GraphicsProgram {
 	 * 
 	 */
 
-	public void Update() {
+	public void init() {
+		setSize(Model.WINDOW_WIDTH, Model.WINDOW_HEIGHT);
+		ball = new GOval(0,0,Model.BALL_RAD, Model.BALL_RAD);
+		paddel = new GRect(0,0,Model.PADDLE_WIDTH,Model.PADDLE_HEIGHT);
+		for (int i = 0; i < brick.length; i++) {
+			brick[i] = new GRect(0, 0, Model.BRICK_WIDTH, Model.BRICK_HEIGHT);
+			brick[i].setSize(0, 0);
+		}
+	}
+
+	public void update() {
+		remove(ball);
+		remove(paddel);
+		add(ball);
+		add(paddel);
+		for (int i = 0; i < brick.length; i++) {
+			if (brick[i].getY() != 0 && brick[i] != null) {
+			add(brick[i]);
+			}
+		}
 	}
 
 	public View(Model model, Control control) {

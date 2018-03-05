@@ -1,10 +1,4 @@
 import java.awt.Color;
-import java.awt.Graphics;
-import acm.graphics.*;
-
-/**
- * 
- */
 
 /**
  * @author J.Masche S.Scheible
@@ -13,21 +7,22 @@ import acm.graphics.*;
 public class Model {
 	private int directionx;
 	private int directiony;
-	private static int level = (int) (Math.random() * 2);
+	private static int level = 0;//(int) (Math.random() * 2);
 	private double vx = Math.random();
 	private double vy = -Math.random();
-	public static final int WINDOW_WIDTH = 400;
-	public static final int WINDOW_HEIGHT = 800;
-	public static final int PADDLE_WIDTH = 40;
+	public static final int WINDOW_WIDTH = 520;
+	public static final int WINDOW_HEIGHT = 1000;
+	public static final int PADDLE_WIDTH = 100;
 	public static final int PADDLE_HEIGHT = 10;
-	public static final int BALL_RAD = 20;
-	public static final int BRICK_WIDTH = 30;
-	public static final int BRICK_HEIGHT = 40;
+	public static final int BALL_RAD = 15;
+	public static final int BRICK_WIDTH = 50;
+	public static final int BRICK_HEIGHT = 20;
+	
 	public boolean collisonWall = false;
 	public boolean collisonBrick = false;
-	public static int brick_counter = 0;
+	public static int brick_counter = 1;
 	private static boolean running = false;
-
+	
 	/**
 	 * 
 	 */
@@ -40,10 +35,13 @@ public class Model {
 		Model model = new Model();
 		Control control = new Control();
 		View view = new View(model, control);
+		view.start();
 		view.addKeyListeners();
+		view.init();
 		ConstructBall(view);
 		ConstructPaddel(view);
 		ConstructBrick(view);
+		view.update();
 		running = true;
 		while (running) {
 			if (brick_counter == 0) {
@@ -54,6 +52,7 @@ public class Model {
 				running = false;
 				view.gameOver();
 			}
+		
 		}
 
 	}
@@ -62,7 +61,9 @@ public class Model {
 
 	private static void ConstructBrick(View view) {
 		// TODO Auto-generated method stub
-
+		int y = 0;
+		int x = 0;
+		int x1 = 0;
 		switch (level) {
 		case (0):
 			brick_counter = 0;
@@ -72,12 +73,13 @@ public class Model {
 
 					if (j % 3 == 0) {
 					} else {
-
-						int y = 20 + j * BRICK_HEIGHT;
-						int x = i * BRICK_WIDTH;
+						y = 20 + j * BRICK_HEIGHT;
+						x = i * BRICK_WIDTH;
+						
 						view.brick[brick_counter].setBounds(x, y, BRICK_WIDTH, BRICK_HEIGHT);
-
+						view.brick[brick_counter].setFilled(true);
 						view.brick[brick_counter].setFillColor(new Color(0, 255 / (j + 1), 0));
+						
 						brick_counter++;
 					}
 				}
@@ -92,9 +94,9 @@ public class Model {
 			int j = 0;
 			for (int i = 0; i < 5; i++) {
 
-				int x = BRICK_WIDTH * (i + 2);
-				int y = BRICK_HEIGHT * j;
-				int x1 = BRICK_WIDTH * (6 - i);
+				 x = BRICK_WIDTH * (i + 2);
+				 y = BRICK_HEIGHT * j;
+				x1 = BRICK_WIDTH * (6 - i);
 				view.brick[brick_counter].setBounds(x, y, BRICK_WIDTH, BRICK_HEIGHT);
 				brick_counter++;
 				view.brick[brick_counter].setBounds(x1, y, BRICK_WIDTH, BRICK_HEIGHT);
@@ -109,9 +111,9 @@ public class Model {
 			}
 			int k = 10;
 			for (int l = 0; l < 5; l++) {
-				int x = BRICK_WIDTH * (l + 2);
-				int y = BRICK_HEIGHT * k;
-				int x1 = BRICK_WIDTH * (6 - l);
+				x = BRICK_WIDTH * (l + 2);
+				y = BRICK_HEIGHT * k;
+				x1 = BRICK_WIDTH * (6 - l);
 				view.brick[brick_counter].setBounds(x, y, BRICK_WIDTH, BRICK_HEIGHT);
 				brick_counter++;
 				view.brick[brick_counter].setBounds(x1, y, BRICK_WIDTH, BRICK_HEIGHT);
@@ -137,12 +139,14 @@ public class Model {
 
 	private static void ConstructPaddel(View view) {
 		// TODO Auto-generated method stub
-		view.paddel.setBounds((WINDOW_WIDTH / 2) - (PADDLE_WIDTH / 2), WINDOW_HEIGHT - (WINDOW_HEIGHT / 5),PADDLE_WIDTH,PADDLE_HEIGHT);
+		view.paddel.setLocation((WINDOW_WIDTH / 2) - (PADDLE_WIDTH / 2),  WINDOW_HEIGHT - (WINDOW_HEIGHT / 5));
+		
 	}
 
 	private static void ConstructBall(View view) {
 		// TODO Auto-generated method stub
-		view.ball.setBounds(WINDOW_WIDTH / 2, WINDOW_HEIGHT - (WINDOW_HEIGHT / 5), BALL_RAD, BALL_RAD);
+		view.ball.setLocation(WINDOW_WIDTH / 2,WINDOW_HEIGHT - (WINDOW_HEIGHT / 5) );
+		
 	}
 
 	public void ballmovement(View view) {
