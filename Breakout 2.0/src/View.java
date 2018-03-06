@@ -1,8 +1,9 @@
 
+import java.awt.Color;
 import acm.graphics.GOval;
 import acm.graphics.GRect;
 import acm.io.IODialog;
-import acm.program.GraphicsProgram;
+import acm.program.*;
 
 /**
  * 
@@ -13,44 +14,65 @@ import acm.program.GraphicsProgram;
  *
  */
 public class View extends GraphicsProgram {
-	
-	public GOval ball;
-	public GRect paddel;
-	public GRect[] brick = new GRect[100];
-	public Model model;
-	public Control control;
+
+	/**
+	 * 
+	 */
+	private GOval ball = new GOval(0,0, Model.BALL_RAD, Model.BALL_RAD);
+	private GRect paddel = new GRect(0,0, Model.PADDLE_WIDTH, Model.PADDLE_HEIGHT);
+	private GRect[] brick = new GRect[100];
+	private Model model;
+	private Control control;
 
 	/**
 	 * @param model
 	 * 
 	 */
 
-	public void init() {
-		setSize(Model.WINDOW_WIDTH, Model.WINDOW_HEIGHT);
-		ball = new GOval(0,0,Model.BALL_RAD, Model.BALL_RAD);
-		paddel = new GRect(0,0,Model.PADDLE_WIDTH,Model.PADDLE_HEIGHT);
-		for (int i = 0; i < brick.length; i++) {
-			brick[i] = new GRect(0, 0, Model.BRICK_WIDTH, Model.BRICK_HEIGHT);
-			brick[i].setSize(0, 0);
-		}
-	}
 
 	public void update() {
-		remove(ball);
-		remove(paddel);
-		add(ball);
-		add(paddel);
-		for (int i = 0; i < brick.length; i++) {
-			if (brick[i].getY() != 0 && brick[i] != null) {
-			add(brick[i]);
-			}
-		}
+		setSize(Model.WINDOW_WIDTH, Model.WINDOW_HEIGHT);
+		addPaddle();
+		addBall();
+		addBricks();
+		
+		
 	}
 
 	public View(Model model, Control control) {
 		// TODO Auto-generated constructor stub
+		addKeyListeners(control);
 		this.model = model;
 		this.control = control;
+		
+	}
+	private void addBricks() {
+		for(int i = 0; i < brick.length; i++) {
+			if (model.activeBricks[i] != false) {
+				GRect brickI = new GRect(model.brickPosition[i].getX(), model.brickPosition[i].getY(), Model.BRICK_WIDTH, Model.BRICK_HEIGHT);
+				brickI.setFilled(true);
+				brickI.setFillColor(new Color(0, 255 , 0));
+				add(brickI);
+			} else if (brick[i] != null){
+				remove(brick[i]);
+			}
+		}
+	}
+	private void addPaddle() {
+		
+		paddel.setFilled(true);
+		paddel.setFillColor(Color.BLACK);
+		add(paddel);
+		paddel.setLocation(model.paddlePosition.getX(), model.paddlePosition.getY());
+		
+	}
+	private void addBall() {
+		ball.setFilled(true);
+		ball.setFillColor(Color.RED);
+		add(ball);
+		
+		ball.setLocation(model.ballPosition.getX(), model.ballPosition.getY());
+		
 	}
 
 	public void gamewin() {
