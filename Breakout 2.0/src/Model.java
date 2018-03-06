@@ -25,7 +25,7 @@ public class Model {
 	private boolean collisonVertical = false;
 	private boolean collisonHorizontal = false;
 	private boolean collisionhappened = false;
-	public int brick_counter = 1;
+	public int brick_counter = 0;
 
 	/**
 	 * 
@@ -272,58 +272,60 @@ public class Model {
 		boolean collision = false;
 		int n = brick_counter;
 		for (int i = 0; i < n; i++) {
-			// oberkante Brick
-			if ((ballPosition.getY() + BALL_RAD >= brickPosition[i].getY()
-					&& ballPosition.getY() + BALL_RAD <= brickPosition[i].getY() + (BRICK_HEIGHT / 2))
+			if (brickPosition[i] != null) {
+				// oberkante Brick
+				if ((ballPosition.getY() + BALL_RAD >= brickPosition[i].getY()
+						&& ballPosition.getY() + BALL_RAD <= brickPosition[i].getY() + (BRICK_HEIGHT / 2))
 
-					&& ((ballPosition.getX() >= brickPosition[i].getX())
-							&& (ballPosition.getX() + BALL_RAD <= brickPosition[i].getX() + BRICK_WIDTH))) {
+						&& ((ballPosition.getX() >= brickPosition[i].getX())
+								&& (ballPosition.getX() + BALL_RAD <= brickPosition[i].getX() + BRICK_WIDTH))) {
 
-				brick_counter--;
+					brick_counter--;
 
-				activeBricks[i] = false;
-				collisonHorizontal = true;
-				collision = true;
+					activeBricks[i] = false;
+					collisonHorizontal = true;
+					collision = true;
 
-			}
-			// unterkante Brick
-			if ((ballPosition.getY() <= brickPosition[i].getY() + BRICK_HEIGHT
-					&& ballPosition.getY() >= brickPosition[i].getY() + (BRICK_HEIGHT / 2))
-					&& (ballPosition.getX() >= brickPosition[i].getX()
-							&& ballPosition.getX() <= brickPosition[i].getX() + BRICK_WIDTH)) {
+				}
+				// unterkante Brick
+				if ((ballPosition.getY() <= brickPosition[i].getY() + BRICK_HEIGHT
+						&& ballPosition.getY() >= brickPosition[i].getY() + (BRICK_HEIGHT / 2))
+						&& (ballPosition.getX() >= brickPosition[i].getX()
+								&& ballPosition.getX() <= brickPosition[i].getX() + BRICK_WIDTH)) {
 
-				brick_counter--;
+					brick_counter--;
 
-				activeBricks[i] = false;
-				collisonHorizontal = true;
-				collision = true;
+					activeBricks[i] = false;
+					collisonHorizontal = true;
+					collision = true;
 
-			}
-			// linkeSeite Brick
-			if ((ballPosition.getX() + BALL_RAD >= brickPosition[i].getX()
-					&& ballPosition.getX() + BALL_RAD <= brickPosition[i].getX() + (BRICK_WIDTH / 2))
-					&& ((ballPosition.getY() >= brickPosition[i].getY()
-							&& (ballPosition.getY() + BALL_RAD <= brickPosition[i].getY() + BRICK_HEIGHT)))) {
+				}
+				// linkeSeite Brick
+				if ((ballPosition.getX() + BALL_RAD >= brickPosition[i].getX()
+						&& ballPosition.getX() + BALL_RAD <= brickPosition[i].getX() + (BRICK_WIDTH / 2))
+						&& ((ballPosition.getY() >= brickPosition[i].getY()
+								&& (ballPosition.getY() + BALL_RAD <= brickPosition[i].getY() + BRICK_HEIGHT)))) {
 
-				brick_counter--;
+					brick_counter--;
 
-				activeBricks[i] = false;
-				collisonVertical = true;
-				collision = true;
+					activeBricks[i] = false;
+					collisonVertical = true;
+					collision = true;
 
-			}
-			// rechteSeite Brick
-			if ((ballPosition.getX() <= brickPosition[i].getX() + PADDLE_WIDTH
-					&& ballPosition.getX() >= brickPosition[i].getX() + (PADDLE_WIDTH / 2))
-					&& ((ballPosition.getY() >= brickPosition[i].getY()
-							&& (ballPosition.getY() + BALL_RAD <= brickPosition[i].getY() + PADDLE_HEIGHT)))) {
+				}
+				// rechteSeite Brick
+				if ((ballPosition.getX() <= brickPosition[i].getX() + PADDLE_WIDTH
+						&& ballPosition.getX() >= brickPosition[i].getX() + (PADDLE_WIDTH / 2))
+						&& ((ballPosition.getY() >= brickPosition[i].getY()
+								&& (ballPosition.getY() + BALL_RAD <= brickPosition[i].getY() + PADDLE_HEIGHT)))) {
 
-				brick_counter--;
+					brick_counter--;
 
-				activeBricks[i] = false;
-				collisonVertical = true;
-				collision = true;
+					activeBricks[i] = false;
+					collisonVertical = true;
+					collision = true;
 
+				}
 			}
 
 		}
