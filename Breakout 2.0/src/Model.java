@@ -26,7 +26,6 @@ public class Model {
 	private boolean collisonHorizontal = false;
 	private boolean collisionhappened = false;
 	public int brick_counter = 1;
-	private static boolean running = false;
 
 	/**
 	 * 
@@ -47,6 +46,8 @@ public class Model {
 		Control control = new Control(model);
 
 		View view = new View(model, control);
+		Lighthouseupdate lighthouse = new Lighthouseupdate(model, control);
+		lighthouse.start();
 		view.start();
 
 		while (true) {
@@ -62,6 +63,7 @@ public class Model {
 			model.new_time = model.first_time;
 			model.first_time = System.nanoTime();
 			model.deltaT = (model.first_time - model.new_time) * 0.000000001; // in seconds
+			lighthouse.update();
 			view.update();
 			model.ballmovement();
 
@@ -220,6 +222,7 @@ public class Model {
 		ballPosition = ballPosition.add(bewegung);
 
 	}
+
 	private boolean Collison() {
 
 		boolean wall = WallColison();
