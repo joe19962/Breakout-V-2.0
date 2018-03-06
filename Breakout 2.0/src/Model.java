@@ -7,6 +7,7 @@ public class Model {
 	public Vector2D ballPosition = new Vector2D(1, 1);
 	public Vector2D paddlePosition = new Vector2D(1, 1);
 	public Vector2D[] brickPosition = new Vector2D[100];
+	public boolean[] activeBricks = new boolean[100];
 	private static int level = 0;// (int) (Math.random() * 2);
 	public static final int WINDOW_WIDTH = 520;
 	public static final int WINDOW_HEIGHT = 1000;
@@ -15,14 +16,15 @@ public class Model {
 	public static final int BALL_RAD = 15;
 	public static final int BRICK_WIDTH = 50;
 	public static final int BRICK_HEIGHT = 20;
-	private static double first_time;
-	private static double new_time;
-	private static double deltaT;
+	private double first_time;
+	private double new_time;
+	private double deltaT;
 	private double ballSpeed = 2.0;
-	Vector2D vec = new Vector2D(0.75, -0.5);
+	Vector2D vec = new Vector2D(BALL_RAD, -BALL_RAD);
 
 	private boolean collisonVertical = false;
 	private boolean collisonHorizontal = false;
+	private boolean collisionhappened = false;
 	public int brick_counter = 1;
 	private static boolean running = false;
 
@@ -35,34 +37,34 @@ public class Model {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		first_time = System.nanoTime();
 		Model model = new Model();
-		Control control = new Control(model);
-		View view = new View(model, control);
-
-		view.start();
-		view.addKeyListeners();
+		model.first_time = System.nanoTime();
 
 		model.ConstructBall();
 		model.ConstructPaddel();
 		model.ConstructBrick();
 
-		running = true;
-		while (running) {
+		Control control = new Control(model);
+
+		View view = new View(model, control);
+		view.start();
+
+		while (true) {
 			if (model.brick_counter == 0) {
-				running = false;
 				view.gamewin();
+				break;
 			}
 			if (model.ballPosition.getY() >= WINDOW_HEIGHT) {
-				running = false;
 				view.gameOver();
+				break;
 			}
 
-			new_time = first_time;
-			first_time = System.nanoTime();
-			deltaT = (first_time - new_time) * 0.000000001; // in seconds
-			model.ballmovement();
+			model.new_time = model.first_time;
+			model.first_time = System.nanoTime();
+			model.deltaT = (model.first_time - model.new_time) * 0.000000001; // in seconds
 			view.update();
+			model.ballmovement();
+
 			// System.out.println(model.ballPosition.getX() + "X " +
 			// model.ballPosition.getY() + " Y");
 
@@ -72,7 +74,7 @@ public class Model {
 
 	}
 
-	private void ConstructBrick() {
+	void ConstructBrick() {
 		// TODO Auto-generated method stub
 		int y = 0;
 		int x = 0;
@@ -90,6 +92,7 @@ public class Model {
 						x = i * BRICK_WIDTH;
 
 						brickPosition[brick_counter] = new Vector2D(x, y);
+						activeBricks[brick_counter] = true;
 
 						// view.brick[brick_counter].setBounds(x, y, BRICK_WIDTH, BRICK_HEIGHT);
 						// view.brick[brick_counter].setFilled(true);
@@ -113,14 +116,18 @@ public class Model {
 				y = BRICK_HEIGHT * j;
 				x1 = BRICK_WIDTH * (6 - i);
 				brickPosition[brick_counter] = new Vector2D(x, y);
+				activeBricks[brick_counter] = true;
 				brick_counter++;
 				brickPosition[brick_counter] = new Vector2D(x1, y);
+				activeBricks[brick_counter] = true;
 				brick_counter++;
 				++j;
 				y = BRICK_HEIGHT * j;
 				brickPosition[brick_counter] = new Vector2D(x, y);
+				activeBricks[brick_counter] = true;
 				brick_counter++;
 				brickPosition[brick_counter] = new Vector2D(x1, y);
+				activeBricks[brick_counter] = true;
 				brick_counter++;
 				j++;
 			}
@@ -130,14 +137,18 @@ public class Model {
 				y = BRICK_HEIGHT * k;
 				x1 = BRICK_WIDTH * (6 - l);
 				brickPosition[brick_counter] = new Vector2D(x, y);
+				activeBricks[brick_counter] = true;
 				brick_counter++;
 				brickPosition[brick_counter] = new Vector2D(x1, y);
+				activeBricks[brick_counter] = true;
 				brick_counter++;
 				++k;
 				y = BRICK_HEIGHT * k;
 				brickPosition[brick_counter] = new Vector2D(x, y);
+				activeBricks[brick_counter] = true;
 				brick_counter++;
 				brickPosition[brick_counter] = new Vector2D(x1, y);
+				activeBricks[brick_counter] = true;
 				brick_counter++;
 				k++;
 
@@ -152,57 +163,53 @@ public class Model {
 		}
 	}
 
-	private void ConstructPaddel() {
+	void ConstructPaddel() {
 		// TODO Auto-generated method stub
 		paddlePosition.setX((WINDOW_WIDTH / 2) - (PADDLE_WIDTH / 2));
 		paddlePosition.setY(WINDOW_HEIGHT - (WINDOW_HEIGHT / 5));
 
 	}
 
-	private void ConstructBall() {
+	void ConstructBall() {
 		// TODO Auto-generated method stub
 		ballPosition.setX(WINDOW_WIDTH / 2);
-		ballPosition.setY(WINDOW_HEIGHT - (WINDOW_HEIGHT / 5) - BALL_RAD - 1);
+		ballPosition.setY(WINDOW_HEIGHT - (WINDOW_HEIGHT / 5) - (BALL_RAD * 2) - 1);
 
 	}
 
 	public void ballmovement() {
 		// TODO Auto-generated method stub
-		Collison();
+		boolean collisionhappened = Collison();
 
-		Vector2D normalVec = vec.normalize();
-		// normalize the vec first
-		if (collisonVertical) {
+		if (collisionhappened) {
+			double x = vec.getX();
+			double y = vec.getY();
+			if (collisonVertical) {
 
-			double normalVecX = normalVec.getX();
-			double normalVecY = normalVec.getY();
-			// getX and getY
-			double alpha = Math.toDegrees(Math.asin((normalVecX / normalVecY)));
+				double alpha = Math.toDegrees(Math.atan((x / y)));
+				System.out.println(alpha * 2);
 
-			// get the Angle of the collision
-			Vector2D rotated = normalVec.rotate(180 - (2 * alpha));
-			// rotate the vec 180degrees- twice the angle of collision
-			vec = rotated.multiply(vec.length());
-			// return the vec back to it's original length
-			collisonVertical = false;
-			// return collisonVertical back to false for next collision
+				// get the Angle of the collision
+				vec = vec.rotate(alpha);
+				// rotate the vec 180degrees- twice the angle of collision
+				collisonVertical = false;
+				System.out.println(alpha);
 
-		}
-		if (collisonHorizontal) {
-			double normalVecX = normalVec.getX();
-			double normalVecY = normalVec.getY();
-			// get X and Y
-			// System.out.println(normalVecX + "X");
-			double alpha = Math.toDegrees(Math.asin((normalVecY / normalVecX)));
-			// big diff here, vecY / vecX instead of other way because horizontal collision
-			// not vertical
-			Vector2D rotated = normalVec.rotate(180 - (2 * alpha));
-			// rotate the vec again
-			vec = rotated.multiply(vec.length());
-			collisonHorizontal = false;
+				// return collisonVertical back to false for next collision
+
+			}
+			if (collisonHorizontal) {
+				double alpha = Math.toDegrees(Math.atan((y / x)));
+				// big diff here, vecY / vecX instead of other way because horizontal collision
+				// not vertical
+				vec = vec.rotate(alpha * 2);
+				// rotate the vec again
+				collisonHorizontal = false;
+
+			}
 		}
 		try {
-			Thread.sleep(1);
+			Thread.sleep(10);
 		} catch (Exception e) {
 			System.out.println("sleep didnt work");
 		}
@@ -211,39 +218,50 @@ public class Model {
 		Vector2D bewegung = vec.multiply(ballSpeed * deltaT);
 		// vector_movement = vec_direction * scalar_speed per unit * deltaT(time passed
 		// in one cycle);
+
 		ballPosition = ballPosition.add(bewegung);
 
 	}
 
-	private void Collison() {
-		WallColison();
-		BrickColison();
-		PaddelColison();
+	private boolean Collison() {
+
+		boolean wall = WallColison();
+		boolean brick = BrickColison();
+		boolean paddel = PaddelColison();
+		boolean ret = !collisionhappened;
+		collisionhappened = wall || brick || paddel;
+		return ret && collisionhappened;
 
 	}
 
-	private void PaddelColison() {
+	private boolean PaddelColison() {
 		// TODO Auto-generated method stub
+		boolean collision = false;
 		if (ballPosition.getY() + BALL_RAD == PADDLE_HEIGHT && (ballPosition.getX() >= paddlePosition.getX()
 				&& ballPosition.getX() <= (paddlePosition.getX() + PADDLE_WIDTH))) {
 
 			collisonHorizontal = true;
+			collision = true;
 		} // Oberkante paddel
 		if (ballPosition.getX() + BALL_RAD == paddlePosition.getX() && (ballPosition.getY() >= paddlePosition.getY()
 				&& ballPosition.getY() <= (paddlePosition.getY() + PADDLE_HEIGHT))) {
 
 			collisonVertical = true;
+			collision = true;
 		} // linke Seite paddel
 		if (ballPosition.getX() + BALL_RAD == (paddlePosition.getX() + PADDLE_WIDTH)
 				&& (ballPosition.getY() >= paddlePosition.getY()
 						&& ballPosition.getY() <= (paddlePosition.getY() + PADDLE_HEIGHT))) {
 
 			collisonVertical = true;
+			collision = true;
 		} // rechte seite Paddel
+		return collision;
 	}
 
-	private void BrickColison() {
+	private boolean BrickColison() {
 		// TODO Auto-generated method stub
+		boolean collision = false;
 		int n = brick_counter;
 		for (int i = 0; i < n; i++) {
 			// oberkante Brick
@@ -253,8 +271,9 @@ public class Model {
 
 				brick_counter--;
 
-				brickPosition[i] = null;
+				activeBricks[brick_counter] = false;
 				collisonHorizontal = true;
+				collision = true;
 			}
 			// unterkante Brick
 			if (ballPosition.getY() + BALL_RAD == brickPosition[i].getY() + BRICK_HEIGHT
@@ -263,8 +282,9 @@ public class Model {
 
 				brick_counter--;
 
-				brickPosition[i] = null;
+				activeBricks[brick_counter] = false;
 				collisonHorizontal = true;
+				collision = true;
 			}
 			// linkeSeite Brick
 			if (ballPosition.getX() == brickPosition[i].getX() && ballPosition.getY() <= brickPosition[i].getY()
@@ -272,8 +292,9 @@ public class Model {
 
 				brick_counter--;
 
-				brickPosition[i] = null;
+				activeBricks[brick_counter] = false;
 				collisonVertical = true;
+				collision = true;
 			}
 			// rechteSeite Brick
 			if (ballPosition.getX() == brickPosition[i].getX() + BRICK_WIDTH
@@ -282,22 +303,29 @@ public class Model {
 
 				brick_counter--;
 
-				brickPosition[i] = null;
+				activeBricks[brick_counter] = false;
 				collisonVertical = true;
+				collision = true;
 			}
+
 		}
+		return collision;
 
 	}
 
-	private void WallColison() {
+	private boolean WallColison() {
 		// TODO Auto-generated method stub
+		boolean collision = false;
 		if ((ballPosition.getX() <= 0) || (ballPosition.getX() >= (WINDOW_WIDTH) - BALL_RAD)) {
 			collisonVertical = true;
+			collision = true;
 
 		} // Seitenwaende
 		if (ballPosition.getY() <= 0) {
 			collisonHorizontal = true;
+			collision = true;
 
 		} // Decke
+		return collision;
 	}
 }
