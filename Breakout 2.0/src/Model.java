@@ -19,7 +19,7 @@ public class Model {
 	private double first_time;
 	private double new_time;
 	private double deltaT;
-	private double ballSpeed = 2.0;
+	private double ballSpeed = 6.0;
 	Vector2D vec = new Vector2D(BALL_RAD, -BALL_RAD);
 
 	private boolean collisonVertical = false;
@@ -186,20 +186,18 @@ public class Model {
 			double y = vec.getY();
 			if (collisonVertical) {
 
-				double alpha = Math.toDegrees(Math.atan((x / y)));
-				System.out.println(alpha * 2);
+				double alpha = Math.atan((x / y));
 
 				// get the Angle of the collision
-				vec = vec.rotate(alpha);
+				vec = vec.rotate(alpha * 2);
 				// rotate the vec 180degrees- twice the angle of collision
 				collisonVertical = false;
-				System.out.println(alpha);
 
 				// return collisonVertical back to false for next collision
 
 			}
 			if (collisonHorizontal) {
-				double alpha = Math.toDegrees(Math.atan((y / x)));
+				double alpha = Math.atan((-y / x));
 				// big diff here, vecY / vecX instead of other way because horizontal collision
 				// not vertical
 				vec = vec.rotate(alpha * 2);
@@ -237,21 +235,28 @@ public class Model {
 	private boolean PaddelColison() {
 		// TODO Auto-generated method stub
 		boolean collision = false;
-		if (ballPosition.getY() + BALL_RAD == PADDLE_HEIGHT && (ballPosition.getX() >= paddlePosition.getX()
-				&& ballPosition.getX() <= (paddlePosition.getX() + PADDLE_WIDTH))) {
+
+		if ((ballPosition.getY() + BALL_RAD >= paddlePosition.getY()
+				&& ballPosition.getY() + BALL_RAD <= paddlePosition.getY() + PADDLE_HEIGHT)
+				&& ((ballPosition.getX() >= paddlePosition.getX())
+						&& (ballPosition.getX() + BALL_RAD <= paddlePosition.getX() + PADDLE_WIDTH))) {
 
 			collisonHorizontal = true;
 			collision = true;
+
 		} // Oberkante paddel
-		if (ballPosition.getX() + BALL_RAD == paddlePosition.getX() && (ballPosition.getY() >= paddlePosition.getY()
-				&& ballPosition.getY() <= (paddlePosition.getY() + PADDLE_HEIGHT))) {
+		if ((ballPosition.getX() + BALL_RAD >= paddlePosition.getX()
+				&& ballPosition.getX() + BALL_RAD <= paddlePosition.getX() + PADDLE_WIDTH)
+				&& ((ballPosition.getY() >= paddlePosition.getY()
+						&& (ballPosition.getY() + BALL_RAD <= paddlePosition.getY() + PADDLE_HEIGHT)))) {
 
 			collisonVertical = true;
 			collision = true;
 		} // linke Seite paddel
-		if (ballPosition.getX() + BALL_RAD == (paddlePosition.getX() + PADDLE_WIDTH)
-				&& (ballPosition.getY() >= paddlePosition.getY()
-						&& ballPosition.getY() <= (paddlePosition.getY() + PADDLE_HEIGHT))) {
+		if ((ballPosition.getX() >= paddlePosition.getX() + PADDLE_WIDTH - BALL_RAD
+				&& ballPosition.getX() <= paddlePosition.getX() + PADDLE_WIDTH)
+				&& ((ballPosition.getY() >= paddlePosition.getY()
+						&& (ballPosition.getY() + BALL_RAD <= paddlePosition.getY() + PADDLE_HEIGHT)))) {
 
 			collisonVertical = true;
 			collision = true;
@@ -267,13 +272,14 @@ public class Model {
 			// oberkante Brick
 			if (ballPosition.getY() + BALL_RAD == brickPosition[i].getY()
 					&& (ballPosition.getX() >= brickPosition[i].getX()
-							&& ballPosition.getX() <= (brickPosition[i].getX() + BRICK_WIDTH))) {
+							&& ballPosition.getX() + BALL_RAD <= (brickPosition[i].getX() + BRICK_WIDTH))) {
 
 				brick_counter--;
 
 				activeBricks[brick_counter] = false;
 				collisonHorizontal = true;
 				collision = true;
+
 			}
 			// unterkante Brick
 			if (ballPosition.getY() + BALL_RAD == brickPosition[i].getY() + BRICK_HEIGHT
@@ -285,6 +291,7 @@ public class Model {
 				activeBricks[brick_counter] = false;
 				collisonHorizontal = true;
 				collision = true;
+
 			}
 			// linkeSeite Brick
 			if (ballPosition.getX() == brickPosition[i].getX() && ballPosition.getY() <= brickPosition[i].getY()
@@ -295,6 +302,7 @@ public class Model {
 				activeBricks[brick_counter] = false;
 				collisonVertical = true;
 				collision = true;
+
 			}
 			// rechteSeite Brick
 			if (ballPosition.getX() == brickPosition[i].getX() + BRICK_WIDTH
@@ -306,6 +314,7 @@ public class Model {
 				activeBricks[brick_counter] = false;
 				collisonVertical = true;
 				collision = true;
+
 			}
 
 		}
