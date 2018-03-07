@@ -8,7 +8,7 @@ public class Model {
 	public Vector2D paddlePosition = new Vector2D(1, 1);
 	public Vector2D[] brickPosition = new Vector2D[100];
 	public boolean[] activeBricks = new boolean[100];
-	private static int level = 0;// (int) (Math.random() * 2);
+	private static int level = (int) (Math.random() * 2);
 	public static final int WINDOW_WIDTH = 520;
 	public static final int WINDOW_HEIGHT = 1000;
 	public static final int PADDLE_WIDTH = 100;
@@ -20,7 +20,7 @@ public class Model {
 	private double new_time;
 	private double deltaT;
 	private int n = 0;
-	private double ballSpeed = 6.0;
+	private double ballSpeed = 10.0;
 	Vector2D vec = new Vector2D(BALL_RAD, -BALL_RAD);
 
 	private boolean collisonVertical = false;
@@ -38,7 +38,7 @@ public class Model {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Model model = new Model();
-		model.first_time = System.nanoTime();
+		
 
 		model.ConstructBall();
 		model.ConstructPaddel();
@@ -50,7 +50,8 @@ public class Model {
 		Lighthouseupdate lighthouse = new Lighthouseupdate(model, control);
 		lighthouse.start();
 		view.start();
-
+		view.waitForClick();
+		model.first_time = System.nanoTime();
 		while (true) {
 			if (model.brick_counter == 0) {
 				view.gamewin();
