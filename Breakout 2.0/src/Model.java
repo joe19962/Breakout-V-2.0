@@ -19,6 +19,7 @@ public class Model {
 	private double first_time;
 	private double new_time;
 	private double deltaT;
+	private int n = 0;
 	private double ballSpeed = 6.0;
 	Vector2D vec = new Vector2D(BALL_RAD, -BALL_RAD);
 
@@ -105,6 +106,7 @@ public class Model {
 				}
 
 			}
+				n = brick_counter; 
 			break;
 
 		case (1):
@@ -153,8 +155,9 @@ public class Model {
 				activeBricks[brick_counter] = true;
 				brick_counter++;
 				k++;
-
+			
 			}
+				n = brick_counter;
 			break;
 
 		case (2):
@@ -270,7 +273,6 @@ public class Model {
 	private boolean BrickColison() {
 		// TODO Auto-generated method stub
 		boolean collision = false;
-		int n = brick_counter;
 		for (int i = 0; i < n; i++) {
 			if (brickPosition[i] != null) {
 				// oberkante Brick
