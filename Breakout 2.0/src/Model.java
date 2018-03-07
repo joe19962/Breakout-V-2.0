@@ -1,4 +1,5 @@
 
+
 /**
  * @author J.Masche S.Scheible
  *
@@ -8,7 +9,7 @@ public class Model {
 	public Vector2D paddlePosition = new Vector2D(1, 1);
 	public Vector2D[] brickPosition = new Vector2D[100];
 	public boolean[] activeBricks = new boolean[100];
-	private static int level = (int) (Math.random() * 2);
+	private static int level = (2);
 	public static final int WINDOW_WIDTH = 520;
 	public static final int WINDOW_HEIGHT = 1000;
 	public static final int PADDLE_WIDTH = 100;
@@ -20,7 +21,7 @@ public class Model {
 	private double new_time;
 	private double deltaT;
 	private int n = 0;
-	private double ballSpeed = 10.0;
+	private double ballSpeed = 15.0;
 	Vector2D vec = new Vector2D(BALL_RAD, -BALL_RAD);
 
 	private boolean collisonVertical = false;
@@ -38,7 +39,6 @@ public class Model {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Model model = new Model();
-		
 
 		model.ConstructBall();
 		model.ConstructPaddel();
@@ -107,7 +107,7 @@ public class Model {
 				}
 
 			}
-				n = brick_counter; 
+			n = brick_counter;
 			break;
 
 		case (1):
@@ -116,7 +116,6 @@ public class Model {
 			brick_counter = 0;
 			int j = 0;
 			for (int i = 0; i < 5; i++) {
-
 				x = BRICK_WIDTH * (i + 2);
 				y = BRICK_HEIGHT * j;
 				x1 = BRICK_WIDTH * (6 - i);
@@ -156,14 +155,27 @@ public class Model {
 				activeBricks[brick_counter] = true;
 				brick_counter++;
 				k++;
-			
 			}
-				n = brick_counter;
+			n = brick_counter;
 			break;
 
 		case (2):
 			// Map 3
-
+			int layerIndex = 10;
+			int i = 0;
+			while (layerIndex >= 0) {
+				for (i = layerIndex; i >= 0; i--) {
+					System.out.println(layerIndex+" "+i);
+					x = (20 + 20 * i - 10 * layerIndex + 10 * layerIndex);
+					y = (10 + 10 * layerIndex);
+					brickPosition[brick_counter] = new Vector2D(x, y);
+					activeBricks[brick_counter] = true;
+					brick_counter++;
+				}
+				layerIndex--;
+			}
+			n = brick_counter;
+			break;
 		default:
 			throw new IllegalArgumentException("Something went srsly wrong with the Randomgenerator");
 		}
