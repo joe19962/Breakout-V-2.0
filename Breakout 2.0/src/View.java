@@ -17,8 +17,8 @@ public class View extends GraphicsProgram {
 	/**
 	 * 
 	 */
-	public GOval ball = new GOval(0, 0, Model.BALL_RAD, Model.BALL_RAD);
-	public GRect paddel = new GRect(0, 0, Model.PADDLE_WIDTH, Model.PADDLE_HEIGHT);
+	public GOval ball = new GOval(0, 0, Constants.BALL_RAD, Constants.BALL_RAD);
+	public GRect paddel = new GRect(0, 0, Constants.PADDLE_WIDTH, Constants.PADDLE_HEIGHT);
 	public GRect[] brick = new GRect[100];
 	private Model model;
 
@@ -28,7 +28,7 @@ public class View extends GraphicsProgram {
 	 */
 
 	public void update() {
-		setSize(Model.WINDOW_WIDTH, Model.WINDOW_HEIGHT);
+		setSize(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
 		addPaddle();
 		addBall();
 		removeBricks();
@@ -55,8 +55,8 @@ public class View extends GraphicsProgram {
 	private void addBricks() {
 		for (int i = 0; i < brick.length; i++) {
 			if (model.activeBricks[i] != false) {
-				brick[i] = new GRect(model.brickPosition[i].getX(), model.brickPosition[i].getY(), Model.BRICK_WIDTH,
-						Model.BRICK_HEIGHT);
+				brick[i] = new GRect(model.brickPosition[i].getX(), model.brickPosition[i].getY(), Constants.BRICK_WIDTH,
+						Constants.BRICK_HEIGHT);
 				brick[i].setFilled(true);
 				brick[i].setFillColor(new Color(0, 255, 0));
 				add(brick[i]);
