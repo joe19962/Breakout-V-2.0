@@ -1,41 +1,38 @@
 
-
 /**
  * @author J.Masche S.Scheible
  *
  */
 public class Model {
+
+	private static int level = (0);
+	// Constants
+	public static final int WINDOW_WIDTH = 1000;
+	public static final int WINDOW_HEIGHT = 500;
+	public static final int PADDLE_WIDTH = WINDOW_WIDTH / 5;
+	public static final int PADDLE_HEIGHT = WINDOW_HEIGHT / 50;
+	public static final int BALL_RAD = WINDOW_HEIGHT / 28;
+	public static final int BRICK_WIDTH = WINDOW_WIDTH / 14;
+	public static final int BRICK_HEIGHT = WINDOW_HEIGHT / 14;
+	// Game Objects
+	private Vector2D vec = new Vector2D(BALL_RAD, -BALL_RAD);
 	public Vector2D ballPosition = new Vector2D(1, 1);
 	public Vector2D paddlePosition = new Vector2D(1, 1);
 	public Vector2D[] brickPosition = new Vector2D[100];
 	public boolean[] activeBricks = new boolean[100];
-	private static int level = (2);
-	public static final int WINDOW_WIDTH = 520;
-	public static final int WINDOW_HEIGHT = 1000;
-	public static final int PADDLE_WIDTH = 100;
-	public static final int PADDLE_HEIGHT = 10;
-	public static final int BALL_RAD = 15;
-	public static final int BRICK_WIDTH = 50;
-	public static final int BRICK_HEIGHT = 20;
+	// Time and Ball variables
 	private double first_time;
 	private double new_time;
 	private double deltaT;
 	private int n = 0;
-	private double ballSpeed = 15.0;
-	Vector2D vec = new Vector2D(BALL_RAD, -BALL_RAD);
+	private double ballSpeed = 10.0;
 
+	// Collision booleans & Brick counter
 	private boolean collisonVertical = false;
 	private boolean collisonHorizontal = false;
 	private boolean collisionhappened = false;
 	public int brick_counter = 0;
 
-	/**
-	 * 
-	 */
-
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Model model = new Model();
@@ -43,12 +40,14 @@ public class Model {
 		model.ConstructBall();
 		model.ConstructPaddel();
 		model.ConstructBrick();
+		double zufallsRotation = Math.toRadians((20 - (Math.random() * 40)));
+		model.vec.rotate(zufallsRotation);
 
 		Control control = new Control(model);
 
 		View view = new View(model, control);
 		Lighthouseupdate lighthouse = new Lighthouseupdate(model, control);
-		lighthouse.start();
+
 		view.start();
 		view.waitForClick();
 		model.first_time = System.nanoTime();
@@ -75,123 +74,6 @@ public class Model {
 			// Paddle movement and Ballmovement needs to be added.
 
 		}
-
-	}
-
-	void ConstructBrick() {
-		// TODO Auto-generated method stub
-		int y = 0;
-		int x = 0;
-		int x1 = 0;
-		switch (level) {
-		case (0):
-			brick_counter = 0;
-			// First Level
-			for (int i = 0; i < 10; i++) {
-				for (int j = 0; j < 11; j++) {
-
-					if (j % 3 == 0) {
-					} else {
-						y = 20 + j * BRICK_HEIGHT;
-						x = i * BRICK_WIDTH;
-
-						brickPosition[brick_counter] = new Vector2D(x, y);
-						activeBricks[brick_counter] = true;
-
-						// view.brick[brick_counter].setBounds(x, y, BRICK_WIDTH, BRICK_HEIGHT);
-						// view.brick[brick_counter].setFilled(true);
-						// view.brick[brick_counter].setFillColor(new Color(0, 255 / (j + 1), 0));
-
-						brick_counter++;
-					}
-				}
-
-			}
-			n = brick_counter;
-			break;
-
-		case (1):
-			// Map 2
-			// Looks ok, needs Color though
-			brick_counter = 0;
-			int j = 0;
-			for (int i = 0; i < 5; i++) {
-				x = BRICK_WIDTH * (i + 2);
-				y = BRICK_HEIGHT * j;
-				x1 = BRICK_WIDTH * (6 - i);
-				brickPosition[brick_counter] = new Vector2D(x, y);
-				activeBricks[brick_counter] = true;
-				brick_counter++;
-				brickPosition[brick_counter] = new Vector2D(x1, y);
-				activeBricks[brick_counter] = true;
-				brick_counter++;
-				++j;
-				y = BRICK_HEIGHT * j;
-				brickPosition[brick_counter] = new Vector2D(x, y);
-				activeBricks[brick_counter] = true;
-				brick_counter++;
-				brickPosition[brick_counter] = new Vector2D(x1, y);
-				activeBricks[brick_counter] = true;
-				brick_counter++;
-				j++;
-			}
-			int k = 10;
-			for (int l = 0; l < 5; l++) {
-				x = BRICK_WIDTH * (l + 2);
-				y = BRICK_HEIGHT * k;
-				x1 = BRICK_WIDTH * (6 - l);
-				brickPosition[brick_counter] = new Vector2D(x, y);
-				activeBricks[brick_counter] = true;
-				brick_counter++;
-				brickPosition[brick_counter] = new Vector2D(x1, y);
-				activeBricks[brick_counter] = true;
-				brick_counter++;
-				++k;
-				y = BRICK_HEIGHT * k;
-				brickPosition[brick_counter] = new Vector2D(x, y);
-				activeBricks[brick_counter] = true;
-				brick_counter++;
-				brickPosition[brick_counter] = new Vector2D(x1, y);
-				activeBricks[brick_counter] = true;
-				brick_counter++;
-				k++;
-			}
-			n = brick_counter;
-			break;
-
-		case (2):
-			// Map 3
-			int layerIndex = 10;
-			int i = 0;
-			while (layerIndex >= 0) {
-				for (i = layerIndex; i >= 0; i--) {
-					System.out.println(layerIndex+" "+i);
-					x = (20 + 20 * i - 10 * layerIndex + 10 * layerIndex);
-					y = (10 + 10 * layerIndex);
-					brickPosition[brick_counter] = new Vector2D(x, y);
-					activeBricks[brick_counter] = true;
-					brick_counter++;
-				}
-				layerIndex--;
-			}
-			n = brick_counter;
-			break;
-		default:
-			throw new IllegalArgumentException("Something went srsly wrong with the Randomgenerator");
-		}
-	}
-
-	void ConstructPaddel() {
-		// TODO Auto-generated method stub
-		paddlePosition.setX((WINDOW_WIDTH / 2) - (PADDLE_WIDTH / 2));
-		paddlePosition.setY(WINDOW_HEIGHT - (WINDOW_HEIGHT / 5));
-
-	}
-
-	void ConstructBall() {
-		// TODO Auto-generated method stub
-		ballPosition.setX(WINDOW_WIDTH / 2);
-		ballPosition.setY(WINDOW_HEIGHT - (WINDOW_HEIGHT / 5) - (BALL_RAD * 2) - 1);
 
 	}
 
@@ -238,6 +120,130 @@ public class Model {
 		ballPosition = ballPosition.add(bewegung);
 
 	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Creation of Game Objects
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private void ConstructBrick() {
+		// TODO Auto-generated method stub
+		int y = 0;
+		int x = 0;
+		int x1 = 0;
+		switch (level) {
+		case (0):
+			brick_counter = 0;
+			// First Level
+			for (int i = 0; i < 10; i++) {
+				for (int j = 0; j < 11; j++) {
+
+					if (j % 3 == 0) {
+					} else {
+						y = 20 + j * BRICK_HEIGHT;
+						x = i * BRICK_WIDTH;
+
+						brickPosition[brick_counter] = new Vector2D(x + WINDOW_WIDTH / 6, y);
+						activeBricks[brick_counter] = true;
+
+						// view.brick[brick_counter].setBounds(x, y, BRICK_WIDTH, BRICK_HEIGHT);
+						// view.brick[brick_counter].setFilled(true);
+						// view.brick[brick_counter].setFillColor(new Color(0, 255 / (j + 1), 0));
+
+						brick_counter++;
+					}
+				}
+
+			}
+			n = brick_counter;
+			break;
+
+		case (1):
+			// Map 2
+			// Looks ok, needs Color though
+			brick_counter = 0;
+			int j = 0;
+			for (int i = 0; i < 4; i++) {
+				x = BRICK_WIDTH * (i + 2) + WINDOW_WIDTH / 6;
+				y = BRICK_HEIGHT * j;
+				x1 = BRICK_WIDTH * (6 - i) + WINDOW_WIDTH / 6;
+				brickPosition[brick_counter] = new Vector2D(x, y);
+				activeBricks[brick_counter] = true;
+				brick_counter++;
+				brickPosition[brick_counter] = new Vector2D(x1, y);
+				activeBricks[brick_counter] = true;
+				brick_counter++;
+				++j;
+				// y = BRICK_HEIGHT * j;
+				// brickPosition[brick_counter] = new Vector2D(x, y);
+				// activeBricks[brick_counter] = true;
+				// brick_counter++;
+				// brickPosition[brick_counter] = new Vector2D(x1, y);
+				// activeBricks[brick_counter] = true;
+				// brick_counter++;
+				// j++;
+			}
+			int k = 4;
+			for (int l = 0; l < 4; l++) {
+				x = BRICK_WIDTH * (l + 2) + WINDOW_WIDTH / 6;
+				y = BRICK_HEIGHT * k;
+				x1 = BRICK_WIDTH * (6 - l) + WINDOW_WIDTH / 6;
+				brickPosition[brick_counter] = new Vector2D(x, y);
+				activeBricks[brick_counter] = true;
+				brick_counter++;
+				brickPosition[brick_counter] = new Vector2D(x1, y);
+				activeBricks[brick_counter] = true;
+				brick_counter++;
+				++k;
+				// y = BRICK_HEIGHT * k;
+				// brickPosition[brick_counter] = new Vector2D(x, y);
+				// activeBricks[brick_counter] = true;
+				// brick_counter++;
+				// brickPosition[brick_counter] = new Vector2D(x1, y);
+				// activeBricks[brick_counter] = true;
+				// brick_counter++;
+				// k++;
+			}
+			n = brick_counter;
+			break;
+
+		case (2):
+			// Map 3
+			int layerIndex = 10;
+			int i = 0;
+			while (layerIndex >= 0) {
+				for (i = layerIndex; i >= 0; i--) {
+					System.out.println(layerIndex + " " + i);
+					x = (20 + 20 * i - 10 * layerIndex + 10 * layerIndex);
+					y = (10 + 10 * layerIndex);
+					brickPosition[brick_counter] = new Vector2D(x, y);
+					activeBricks[brick_counter] = true;
+					brick_counter++;
+				}
+				layerIndex--;
+			}
+			n = brick_counter;
+			break;
+		default:
+			throw new IllegalArgumentException("Something went srsly wrong with the Randomgenerator");
+		}
+	}
+
+	private void ConstructPaddel() {
+		// TODO Auto-generated method stub
+		paddlePosition.setX((WINDOW_WIDTH / 2) - (PADDLE_WIDTH / 2));
+		paddlePosition.setY(WINDOW_HEIGHT - (PADDLE_HEIGHT * 6));
+
+	}
+
+	private void ConstructBall() {
+		// TODO Auto-generated method stub
+		ballPosition.setX(WINDOW_WIDTH / 2);
+		ballPosition.setY(WINDOW_HEIGHT - (PADDLE_HEIGHT * 6) - (BALL_RAD * 2) - 1);
+
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Collision/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	private boolean Collison() {
 
@@ -329,10 +335,10 @@ public class Model {
 
 				}
 				// rechteSeite Brick
-				if ((ballPosition.getX() <= brickPosition[i].getX() + PADDLE_WIDTH
-						&& ballPosition.getX() >= brickPosition[i].getX() + (PADDLE_WIDTH / 2))
+				if ((ballPosition.getX() <= brickPosition[i].getX() + BRICK_WIDTH
+						&& ballPosition.getX() >= brickPosition[i].getX() + (BRICK_WIDTH / 2))
 						&& ((ballPosition.getY() >= brickPosition[i].getY()
-								&& (ballPosition.getY() + BALL_RAD <= brickPosition[i].getY() + PADDLE_HEIGHT)))) {
+								&& (ballPosition.getY() + BALL_RAD <= brickPosition[i].getY() + BRICK_HEIGHT)))) {
 
 					brick_counter--;
 
