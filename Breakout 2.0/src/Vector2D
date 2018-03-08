@@ -2,96 +2,63 @@ public class Vector2D {
 	double x;
 	double y;
 
-	Vector2D(double x, double y)
-	{
+	Vector2D(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
-	
-	
+
 	public double getX() {
 		return this.x;
 	}
-	
+
 	public double getY() {
 		return this.y;
 	}
-	
+
 	public void setX(double x) {
 		this.x = x;
 	}
-	
+
 	public void setY(double y) {
 		this.y = y;
 	}
-	
-	public Vector2D add(Vector2D other)
-	{
-		return new Vector2D(this.x + other.x,this.y + other.y);
+
+	public Vector2D add(Vector2D other) {
+		return new Vector2D(this.x + other.x, this.y + other.y);
 	}
-	public Vector2D negate(){
-		return new Vector2D(this.x * -1, this .y * -1);
+
+	public Vector2D negate() {
+		return new Vector2D(this.x * -1, this.y * -1);
 	}
-	public double dotProduct(Vector2D other) 
-	{
+
+	public double dotProduct(Vector2D other) {
 		return ((this.x * other.x) + (this.y * other.y));
 	}
-	
-	public double getRadiansTo(Vector2D other) 
-	{
+
+	public double getRadiansTo(Vector2D other) {
 		double dotProduct = this.dotProduct(other);
 		double lengthThis = this.length();
 		double lengthOther = other.length();
-		return dotProduct/ (lengthThis * lengthOther);
+		return dotProduct / (lengthThis * lengthOther);
 	}
-	
-	public Vector2D rotate(double p_angle) 
-	{
-		return new Vector2D(this.x * Math.cos(p_angle) - this.y * Math.sin(p_angle), // now x is something different than original vector x
-		this.x * Math.sin(p_angle) + this.y * Math.cos(p_angle));	
+
+	public Vector2D rotate(double p_angle) {
+		return new Vector2D(this.x * Math.cos(p_angle) - this.y * Math.sin(p_angle), // now x is something different
+																						// than original vector x
+				this.x * Math.sin(p_angle) + this.y * Math.cos(p_angle));
 	}
-	
-	public Vector2D multiply(double p_scalar) 
-	{
+
+	public Vector2D multiply(double p_scalar) {
 		return new Vector2D(this.x * p_scalar, this.y * p_scalar);
 	}
-	
-	public double length() 
-	{
-		
-		return Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+
+	public double length() {
+
+		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 	}
-	public Vector2D normalize() 
-	{
+
+	public Vector2D normalize() {
 		double length = this.length();
-		return new Vector2D(this.x/ length, this.y/length);
+		return new Vector2D(this.x / length, this.y / length);
 	}
-//	public static void main(String[] args) {
-//		Vector2D vec1  = new Vector2D(1,0);
-//		Vector2D vec2 =  new Vector2D(0,1);
-//		Vector2D testAdd = vec1.add(vec2);
-//		Vector2D testSub = vec1.add(vec2.negate());
-//		System.out.printf("%f %f\n", testAdd.x(), testAdd.y());
-//		System.out.printf("%f %f\n", testSub.x(), testSub.y());
-//		
-//		Vector2D rotated = vec1.rotate(Math.toRadians(90.0));
-//		System.out.printf("%f %f\n", rotated.x(), rotated.y());
-//		
-//		Vector2D multiplied = vec1.multiply(2.5);
-//		System.out.printf("%f %f\n", multiplied.x(), multiplied.y());
-//		System.out.println(vec1.length());
-//		System.out.println(multiplied.length());
-//		
-//		Vector2D vec3 = new Vector2D(3,4);
-//		Vector2D vec4 = new Vector2D(4,3);
-//		double cross = vec3.dotProduct(vec4);
-//		
-//		System.out.println(cross);
-//		
-//		System.out.println(vec3.normalize().length());
-//		//get angle of vec3 and vec4 in radians
-//		System.out.println(Math.acos(vec3.getRadiansTo(vec4)));
-//		//get angle of vec1 and vec2 in radians and convert to degrees (should be 90
-//		System.out.println(Math.toDegrees(Math.acos(vec2.getRadiansTo(vec1))));
-//	}
 }
